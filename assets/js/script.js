@@ -430,34 +430,48 @@ function updateUI() {
 function toggleMobileMenu() {
     const mobileMenu = document.getElementById('mobile-menu');
     const hamburgerBtn = document.getElementById('mobile-menu-button');
+    const backdrop = document.querySelector('.mobile-menu-backdrop');
     const body = document.body;
     
-    if (!mobileMenu || !hamburgerBtn) return;
+    if (!mobileMenu) {
+        console.error('Mobile menu element not found');
+        return;
+    }
     
     const isOpen = !mobileMenu.classList.contains('hidden');
     
     if (isOpen) {
         // Close menu
-        mobileMenu.classList.add('mobile-menu-closing');
-        hamburgerBtn.classList.remove('active');
-        hamburgerBtn.setAttribute('aria-expanded', 'false');
-        hamburgerBtn.setAttribute('aria-label', 'فتح القائمة');
+        mobileMenu.classList.add('hidden');
+        if (hamburgerBtn) {
+            hamburgerBtn.classList.remove('active');
+            hamburgerBtn.setAttribute('aria-expanded', 'false');
+            hamburgerBtn.setAttribute('aria-label', 'فتح القائمة');
+        }
+        if (backdrop) {
+            backdrop.classList.remove('show');
+        }
         mobileMenu.setAttribute('aria-hidden', 'true');
         body.classList.remove('mobile-menu-open');
         
-        // Remove closing class after animation
-        setTimeout(() => {
-            mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('mobile-menu-closing');
-        }, 300);
+        // Remove scroll lock
+        body.style.overflow = '';
     } else {
         // Open menu
         mobileMenu.classList.remove('hidden');
-        hamburgerBtn.classList.add('active');
-        hamburgerBtn.setAttribute('aria-expanded', 'true');
-        hamburgerBtn.setAttribute('aria-label', 'إغلاق القائمة');
+        if (hamburgerBtn) {
+            hamburgerBtn.classList.add('active');
+            hamburgerBtn.setAttribute('aria-expanded', 'true');
+            hamburgerBtn.setAttribute('aria-label', 'إغلاق القائمة');
+        }
+        if (backdrop) {
+            backdrop.classList.add('show');
+        }
         mobileMenu.setAttribute('aria-hidden', 'false');
         body.classList.add('mobile-menu-open');
+        
+        // Prevent background scrolling
+        body.style.overflow = 'hidden';
         
         // Focus first menu item for accessibility
         setTimeout(() => {
@@ -465,6 +479,9 @@ function toggleMobileMenu() {
             if (firstLink) firstLink.focus();
         }, 100);
     }
+    
+    // Debug log
+    console.log('Mobile menu toggled:', !isOpen ? 'opened' : 'closed');
 }
 
 // Close mobile menu when clicking outside
