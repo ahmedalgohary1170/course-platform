@@ -213,7 +213,7 @@ function loadSampleData() {
             category: 'تصميم',
             level: 'متوسط',
             duration: '6 أسابيع',
-            instructor: 'فاطمة أحمد',
+            instructor:  'أحمد محمد',
             rating: 4.9,
             students: 890,
             image: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=400&h=250&fit=crop&crop=center',
@@ -232,7 +232,7 @@ function loadSampleData() {
             category: 'تسويق',
             level: 'مبتدئ',
             duration: '4 أسابيع',
-            instructor: 'محمد علي',
+            instructor: 'أحمد محمد',
             rating: 4.7,
             students: 2100,
             image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=250&fit=crop&crop=center',
@@ -251,7 +251,7 @@ function loadSampleData() {
             category: 'برمجة',
             level: 'متقدم',
             duration: '12 أسبوع',
-            instructor: 'سارة حسن',
+            instructor:  'أحمد محمد',
             rating: 4.9,
             students: 750,
             image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=250&fit=crop&crop=center',
@@ -270,7 +270,7 @@ function loadSampleData() {
             category: 'أعمال',
             level: 'متوسط',
             duration: '5 أسابيع',
-            instructor: 'خالد عبدالله',
+            instructor: 'أحمد محمد',
             rating: 4.6,
             students: 1500,
             image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=250&fit=crop&crop=center',
@@ -289,7 +289,7 @@ function loadSampleData() {
             category: 'تصميم',
             level: 'مبتدئ',
             duration: '6 أسابيع',
-            instructor: 'نور الدين',
+            instructor: 'أحمد محمد',
             rating: 4.8,
             students: 680,
             image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=250&fit=crop&crop=center',
@@ -308,7 +308,7 @@ function loadSampleData() {
             category: 'برمجة',
             level: 'متقدم',
             duration: '10 أسابيع',
-            instructor: 'د. أمين صالح',
+            instructor: 'أحمد محمد',
             rating: 4.9,
             students: 420,
             image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=250&fit=crop&crop=center',
@@ -327,7 +327,7 @@ function loadSampleData() {
             category: 'تسويق',
             level: 'مبتدئ',
             duration: '4 أسابيع',
-            instructor: 'ليلى محمود',
+            instructor: 'أحمد محمد',
             rating: 4.7,
             students: 1800,
             image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&h=250&fit=crop&crop=center',
@@ -426,11 +426,66 @@ function updateUI() {
     }
 }
 
-// Mobile Menu Toggle
+// Mobile Menu Toggle with Enhanced Functionality
 function toggleMobileMenu() {
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (mobileMenu) {
-        mobileMenu.classList.toggle('hidden');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const hamburgerBtn = document.getElementById('mobile-menu-button');
+    const body = document.body;
+    
+    if (!mobileMenu || !hamburgerBtn) return;
+    
+    const isOpen = !mobileMenu.classList.contains('hidden');
+    
+    if (isOpen) {
+        // Close menu
+        mobileMenu.classList.add('mobile-menu-closing');
+        hamburgerBtn.classList.remove('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        hamburgerBtn.setAttribute('aria-label', 'فتح القائمة');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        body.classList.remove('mobile-menu-open');
+        
+        // Remove closing class after animation
+        setTimeout(() => {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('mobile-menu-closing');
+        }, 300);
+    } else {
+        // Open menu
+        mobileMenu.classList.remove('hidden');
+        hamburgerBtn.classList.add('active');
+        hamburgerBtn.setAttribute('aria-expanded', 'true');
+        hamburgerBtn.setAttribute('aria-label', 'إغلاق القائمة');
+        mobileMenu.setAttribute('aria-hidden', 'false');
+        body.classList.add('mobile-menu-open');
+        
+        // Focus first menu item for accessibility
+        setTimeout(() => {
+            const firstLink = mobileMenu.querySelector('.mobile-menu-link');
+            if (firstLink) firstLink.focus();
+        }, 100);
+    }
+}
+
+// Close mobile menu when clicking outside
+function closeMobileMenuOnOutsideClick(event) {
+    const mobileMenu = document.getElementById('mobile-menu');
+    const hamburgerBtn = document.getElementById('mobile-menu-button');
+    
+    if (!mobileMenu || mobileMenu.classList.contains('hidden')) return;
+    
+    if (!mobileMenu.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+        toggleMobileMenu();
+    }
+}
+
+// Handle escape key to close mobile menu
+function handleMobileMenuEscape(event) {
+    if (event.key === 'Escape') {
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+            toggleMobileMenu();
+        }
     }
 }
 
@@ -744,22 +799,35 @@ function filterCoursesByCategory(category) {
     }
 }
 
-// Initialize Application
+// Initialize Application with Enhanced Features
 function initializeApp() {
+    // Load data and render components
     loadSampleData();
     renderCourses();
     renderFeaturedCourses();
     renderStudents();
     updateUI();
     
-    // Add event listeners
-    document.getElementById('loginForm').addEventListener('submit', handleLogin);
-    document.getElementById('registerForm').addEventListener('submit', handleRegister);
+    // Initialize modern UI features
+    initializeModernFeatures();
+    
+    // Add form event listeners
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const addCourseForm = document.getElementById('addCourseForm');
+    
+    if (loginForm) loginForm.addEventListener('submit', handleLogin);
+    if (registerForm) registerForm.addEventListener('submit', handleRegister);
+    if (addCourseForm) addCourseForm.addEventListener('submit', handleAddCourse);
     
     // Initialize enhanced payment system
     initializeEnhancedPaymentSystem();
     
-    document.getElementById('addCourseForm').addEventListener('submit', handleAddCourse);
+    // Mobile menu event listeners
+    initializeMobileMenuListeners();
+    
+    // Accessibility and keyboard navigation
+    initializeAccessibilityFeatures();
     
     // Close modals when clicking outside
     document.addEventListener('click', function(e) {
@@ -767,6 +835,224 @@ function initializeApp() {
             closeModal(e.target.id);
         }
     });
+    
+    // Initialize smooth scrolling
+    initializeSmoothScrolling();
+    
+    // Initialize intersection observer for animations
+    initializeScrollAnimations();
+    
+    // Initialize theme detection
+    initializeThemeDetection();
+}
+
+// Initialize modern UI features
+function initializeModernFeatures() {
+    // Add loading states to buttons
+    document.querySelectorAll('button[onclick]').forEach(button => {
+        const originalOnclick = button.getAttribute('onclick');
+        button.addEventListener('click', function() {
+            if (!this.disabled) {
+                this.classList.add('loading');
+                setTimeout(() => {
+                    this.classList.remove('loading');
+                }, 1000);
+            }
+        });
+    });
+    
+    // Add ripple effect to buttons
+    document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', createRippleEffect);
+    });
+    
+    // Initialize tooltips
+    initializeTooltips();
+}
+
+// Initialize mobile menu event listeners
+function initializeMobileMenuListeners() {
+    // Click outside to close
+    document.addEventListener('click', closeMobileMenuOnOutsideClick);
+    
+    // Escape key to close
+    document.addEventListener('keydown', handleMobileMenuEscape);
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu && window.innerWidth >= 1024) {
+            // Close mobile menu on desktop
+            if (!mobileMenu.classList.contains('hidden')) {
+                toggleMobileMenu();
+            }
+        }
+    });
+}
+
+// Initialize accessibility features
+function initializeAccessibilityFeatures() {
+    // Skip link functionality
+    const skipLink = document.querySelector('a[href="#main-content"]');
+    if (skipLink) {
+        skipLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const mainContent = document.getElementById('main-content');
+            if (mainContent) {
+                mainContent.focus();
+                mainContent.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+    
+    // Enhanced focus management
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            document.body.classList.add('keyboard-navigation');
+        }
+    });
+    
+    document.addEventListener('mousedown', function() {
+        document.body.classList.remove('keyboard-navigation');
+    });
+    
+    // ARIA live region for dynamic content
+    if (!document.getElementById('aria-live-region')) {
+        const liveRegion = document.createElement('div');
+        liveRegion.id = 'aria-live-region';
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.className = 'sr-only';
+        document.body.appendChild(liveRegion);
+    }
+}
+
+// Initialize smooth scrolling
+function initializeSmoothScrolling() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#' && href.length > 1) {
+                const target = document.querySelector(href);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
+    });
+}
+
+// Initialize scroll animations
+function initializeScrollAnimations() {
+    if ('IntersectionObserver' in window) {
+        const animationObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                    animationObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        // Observe elements with animation classes
+        document.querySelectorAll('[data-aos], .fade-in, .slide-up').forEach(el => {
+            animationObserver.observe(el);
+        });
+    }
+}
+
+// Initialize theme detection
+function initializeThemeDetection() {
+    // Detect system theme preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark-mode');
+    }
+    
+    // Listen for theme changes
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (e.matches) {
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+            }
+        });
+    }
+}
+
+// Create ripple effect for buttons
+function createRippleEffect(e) {
+    const button = e.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    ripple.classList.add('ripple');
+    
+    button.appendChild(ripple);
+    
+    setTimeout(() => {
+        ripple.remove();
+    }, 600);
+}
+
+// Initialize tooltips
+function initializeTooltips() {
+    document.querySelectorAll('[data-tooltip]').forEach(element => {
+        element.addEventListener('mouseenter', showTooltip);
+        element.addEventListener('mouseleave', hideTooltip);
+        element.addEventListener('focus', showTooltip);
+        element.addEventListener('blur', hideTooltip);
+    });
+}
+
+// Show tooltip
+function showTooltip(e) {
+    const element = e.target;
+    const tooltipText = element.getAttribute('data-tooltip');
+    if (!tooltipText) return;
+    
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.textContent = tooltipText;
+    tooltip.id = 'active-tooltip';
+    
+    document.body.appendChild(tooltip);
+    
+    const rect = element.getBoundingClientRect();
+    tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+    tooltip.style.top = rect.top - tooltip.offsetHeight - 8 + 'px';
+}
+
+// Hide tooltip
+function hideTooltip() {
+    const tooltip = document.getElementById('active-tooltip');
+    if (tooltip) {
+        tooltip.remove();
+    }
+}
+
+// Announce to screen readers
+function announceToScreenReader(message) {
+    const liveRegion = document.getElementById('aria-live-region');
+    if (liveRegion) {
+        liveRegion.textContent = message;
+        setTimeout(() => {
+            liveRegion.textContent = '';
+        }, 1000);
+    }
 }
 
 // Enhanced payment system initialization
