@@ -1,0 +1,74 @@
+<!-- Courses Page -->
+<div id="coursesPage" class="page hidden">
+    <div class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Page Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-800 mb-4">جميع الكورسات</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">اكتشف مجموعة واسعة من الكورسات التعليمية المتخصصة</p>
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Search Input -->
+                    <div class="md:col-span-2">
+                        <label class="form-label">البحث في الكورسات</label>
+                        <div class="relative">
+                            <input type="text" id="courseSearch" placeholder="ابحث عن كورس..." 
+                                   class="form-input pl-10">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Filter -->
+                    <div>
+                        <label class="form-label">التصنيف</label>
+                        <select id="categoryFilter" onchange="filterCoursesByCategory(this.value)" 
+                                class="form-input">
+                            <option value="all">جميع التصنيفات</option>
+                            <option value="برمجة">البرمجة</option>
+                            <option value="تصميم">التصميم</option>
+                            <option value="تسويق">التسويق</option>
+                            <option value="أعمال">الأعمال</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Filter Tags -->
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <button onclick="filterCoursesByLevel('all')" 
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-blue-100 hover:text-blue-700 transition-colors">
+                        جميع المستويات
+                    </button>
+                    <button onclick="filterCoursesByLevel('مبتدئ')" 
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-green-100 hover:text-green-700 transition-colors">
+                        مبتدئ
+                    </button>
+                    <button onclick="filterCoursesByLevel('متوسط')" 
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-yellow-100 hover:text-yellow-700 transition-colors">
+                        متوسط
+                    </button>
+                    <button onclick="filterCoursesByLevel('متقدم')" 
+                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-red-100 hover:text-red-700 transition-colors">
+                        متقدم
+                    </button>
+                </div>
+            </div>
+
+            <!-- Courses Grid -->
+            <div id="coursesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Courses will be loaded here by JavaScript -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center mt-12">
+                <button id="loadMoreBtn" onclick="loadMoreCourses()" 
+                        class="btn-secondary">
+                    <i class="fas fa-plus ml-2"></i>
+                    تحميل المزيد
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

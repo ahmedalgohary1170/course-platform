@@ -1,0 +1,452 @@
+<!-- Students Management Page -->
+<div id="studentsManagementPage" class="page hidden">
+    <div class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">إدارة الطلاب</h1>
+                    <p class="text-lg text-gray-600">متابعة وإدارة جميع الطلاب المسجلين</p>
+                </div>
+                <div class="flex space-x-4 space-x-reverse mt-4 md:mt-0">
+                    <button onclick="exportStudentsData()" class="btn-secondary">
+                        <i class="fas fa-download ml-2"></i>
+                        تصدير البيانات
+                    </button>
+                    <button onclick="document.getElementById('addStudentModal').classList.add('show')" 
+                            class="btn-primary">
+                        <i class="fas fa-user-plus ml-2"></i>
+                        إضافة طالب
+                    </button>
+                </div>
+            </div>
+
+            <!-- Students Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="stats-card bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold mb-1" id="totalStudentsStats">0</div>
+                            <div class="text-blue-100">إجمالي الطلاب</div>
+                        </div>
+                        <i class="fas fa-users text-3xl text-blue-200"></i>
+                    </div>
+                </div>
+                
+                <div class="stats-card bg-gradient-to-r from-green-500 to-green-600 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold mb-1" id="activeStudentsStats">0</div>
+                            <div class="text-green-100">الطلاب النشطون</div>
+                        </div>
+                        <i class="fas fa-user-check text-3xl text-green-200"></i>
+                    </div>
+                </div>
+                
+                <div class="stats-card bg-gradient-to-r from-yellow-500 to-yellow-600 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold mb-1" id="newStudentsStats">0</div>
+                            <div class="text-yellow-100">طلاب جدد هذا الشهر</div>
+                        </div>
+                        <i class="fas fa-user-plus text-3xl text-yellow-200"></i>
+                    </div>
+                </div>
+                
+                <div class="stats-card bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-2xl font-bold mb-1" id="avgProgressStats">0%</div>
+                            <div class="text-purple-100">متوسط التقدم</div>
+                        </div>
+                        <i class="fas fa-chart-line text-3xl text-purple-200"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="form-label">البحث عن طالب</label>
+                        <div class="relative">
+                            <input type="text" id="studentSearch" placeholder="ابحث بالاسم أو البريد الإلكتروني..." 
+                                   class="form-input pl-10" onkeyup="searchStudents(this.value)">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">فلترة حسب الكورس</label>
+                        <select id="courseFilter" onchange="filterStudentsByCourse(this.value)" class="form-input">
+                            <option value="all">جميع الكورسات</option>
+                            <!-- Course options will be loaded here -->
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="form-label">فلترة حسب التقدم</label>
+                        <select id="progressFilter" onchange="filterStudentsByProgress(this.value)" class="form-input">
+                            <option value="all">جميع المستويات</option>
+                            <option value="0-25">0% - 25%</option>
+                            <option value="26-50">26% - 50%</option>
+                            <option value="51-75">51% - 75%</option>
+                            <option value="76-100">76% - 100%</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Table -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-semibold text-gray-800">قائمة الطلاب</h2>
+                        <div class="flex space-x-2 space-x-reverse">
+                            <button onclick="selectAllStudents()" class="text-sm text-blue-600 hover:text-blue-700">
+                                تحديد الكل
+                            </button>
+                            <button onclick="deselectAllStudents()" class="text-sm text-gray-600 hover:text-gray-700">
+                                إلغاء التحديد
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    الطالب
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    رقم الهاتف
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    الكورسات المسجلة
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    التقدم
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    تاريخ التسجيل
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    الحالة
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    الإجراءات
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- Students data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <p class="text-sm text-gray-700">
+                                عرض <span id="studentsFrom">1</span> إلى <span id="studentsTo">10</span> 
+                                من <span id="studentsTotal">0</span> طالب
+                            </p>
+                        </div>
+                        <div class="flex space-x-2 space-x-reverse">
+                            <button onclick="previousPage()" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">
+                                السابق
+                            </button>
+                            <button onclick="nextPage()" class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">
+                                التالي
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bulk Actions -->
+            <div id="bulkActions" class="hidden bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-info-circle text-blue-600 ml-2"></i>
+                        <span class="text-blue-800">تم تحديد <span id="selectedCount">0</span> طالب</span>
+                    </div>
+                    <div class="flex space-x-2 space-x-reverse">
+                        <button onclick="sendBulkMessage()" class="btn-secondary text-sm">
+                            <i class="fas fa-envelope ml-1"></i>
+                            إرسال رسالة
+                        </button>
+                        <button onclick="exportSelectedStudents()" class="btn-secondary text-sm">
+                            <i class="fas fa-download ml-1"></i>
+                            تصدير المحدد
+                        </button>
+                        <button onclick="bulkEnrollCourse()" class="btn-primary text-sm">
+                            <i class="fas fa-plus ml-1"></i>
+                            تسجيل في كورس
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentStudentsPage = 1;
+let studentsPerPage = 10;
+let filteredStudents = [];
+let selectedStudents = [];
+
+// Load students management data
+function loadStudentsManagement() {
+    filteredStudents = [...students];
+    updateStudentsStats();
+    loadCourseFilterOptions();
+    renderStudentsTable();
+}
+
+function updateStudentsStats() {
+    document.getElementById('totalStudentsStats').textContent = students.length;
+    document.getElementById('activeStudentsStats').textContent = students.filter(s => s.progress > 0).length;
+    document.getElementById('newStudentsStats').textContent = Math.floor(students.length * 0.3); // Mock new students
+    
+    const avgProgress = students.reduce((sum, student) => sum + student.progress, 0) / students.length;
+    document.getElementById('avgProgressStats').textContent = Math.round(avgProgress) + '%';
+}
+
+function loadCourseFilterOptions() {
+    const courseFilter = document.getElementById('courseFilter');
+    if (courseFilter) {
+        const courseOptions = courses.map(course => 
+            `<option value="${course.id}">${course.title}</option>`
+        ).join('');
+        courseFilter.innerHTML = '<option value="all">جميع الكورسات</option>' + courseOptions;
+    }
+}
+
+function renderStudentsTable() {
+    const tbody = document.getElementById('studentsTableBody');
+    if (!tbody) return;
+    
+    const startIndex = (currentStudentsPage - 1) * studentsPerPage;
+    const endIndex = startIndex + studentsPerPage;
+    const pageStudents = filteredStudents.slice(startIndex, endIndex);
+    
+    tbody.innerHTML = pageStudents.map(student => `
+        <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+                <input type="checkbox" value="${student.id}" onchange="toggleStudentSelection(${student.id})">
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 h-10 w-10">
+                        <img class="h-10 w-10 rounded-full" 
+                             src="https://via.placeholder.com/40x40/4F46E5/FFFFFF?text=${student.name.charAt(0)}" 
+                             alt="${student.name}">
+                    </div>
+                    <div class="mr-4">
+                        <div class="text-sm font-medium text-gray-900">${student.name}</div>
+                        <div class="text-sm text-gray-500">${student.email}</div>
+                    </div>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                ${student.phone}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <div class="flex flex-wrap gap-1">
+                    ${student.enrolledCourses.map(courseId => {
+                        const course = courses.find(c => c.id === courseId);
+                        return course ? `<span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${course.title}</span>` : '';
+                    }).join('')}
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                    <div class="w-full bg-gray-200 rounded-full h-2 ml-3">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: ${student.progress}%"></div>
+                    </div>
+                    <span class="text-sm text-gray-600 min-w-max">${student.progress}%</span>
+                </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                ${formatDate(new Date())}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${student.progress > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                    ${student.progress > 0 ? 'نشط' : 'غير نشط'}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex space-x-2 space-x-reverse">
+                    <button onclick="viewStudent(${student.id})" class="text-blue-600 hover:text-blue-900">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button onclick="editStudent(${student.id})" class="text-green-600 hover:text-green-900">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="messageStudent(${student.id})" class="text-purple-600 hover:text-purple-900">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    <button onclick="deleteStudent(${student.id})" class="text-red-600 hover:text-red-900">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+    
+    updatePaginationInfo();
+}
+
+function searchStudents(query) {
+    if (!query.trim()) {
+        filteredStudents = [...students];
+    } else {
+        filteredStudents = students.filter(student => 
+            student.name.toLowerCase().includes(query.toLowerCase()) ||
+            student.email.toLowerCase().includes(query.toLowerCase())
+        );
+    }
+    currentStudentsPage = 1;
+    renderStudentsTable();
+}
+
+function filterStudentsByCourse(courseId) {
+    if (courseId === 'all') {
+        filteredStudents = [...students];
+    } else {
+        filteredStudents = students.filter(student => 
+            student.enrolledCourses.includes(parseInt(courseId))
+        );
+    }
+    currentStudentsPage = 1;
+    renderStudentsTable();
+}
+
+function filterStudentsByProgress(range) {
+    if (range === 'all') {
+        filteredStudents = [...students];
+    } else {
+        const [min, max] = range.split('-').map(Number);
+        filteredStudents = students.filter(student => 
+            student.progress >= min && student.progress <= max
+        );
+    }
+    currentStudentsPage = 1;
+    renderStudentsTable();
+}
+
+function toggleStudentSelection(studentId) {
+    const index = selectedStudents.indexOf(studentId);
+    if (index > -1) {
+        selectedStudents.splice(index, 1);
+    } else {
+        selectedStudents.push(studentId);
+    }
+    updateBulkActions();
+}
+
+function toggleSelectAll() {
+    const checkbox = document.getElementById('selectAllCheckbox');
+    const studentCheckboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+    
+    studentCheckboxes.forEach(cb => {
+        cb.checked = checkbox.checked;
+        const studentId = parseInt(cb.value);
+        if (checkbox.checked && !selectedStudents.includes(studentId)) {
+            selectedStudents.push(studentId);
+        } else if (!checkbox.checked) {
+            const index = selectedStudents.indexOf(studentId);
+            if (index > -1) selectedStudents.splice(index, 1);
+        }
+    });
+    
+    updateBulkActions();
+}
+
+function updateBulkActions() {
+    const bulkActions = document.getElementById('bulkActions');
+    const selectedCount = document.getElementById('selectedCount');
+    
+    if (selectedStudents.length > 0) {
+        bulkActions.classList.remove('hidden');
+        selectedCount.textContent = selectedStudents.length;
+    } else {
+        bulkActions.classList.add('hidden');
+    }
+}
+
+function updatePaginationInfo() {
+    const total = filteredStudents.length;
+    const from = (currentStudentsPage - 1) * studentsPerPage + 1;
+    const to = Math.min(currentStudentsPage * studentsPerPage, total);
+    
+    document.getElementById('studentsFrom').textContent = from;
+    document.getElementById('studentsTo').textContent = to;
+    document.getElementById('studentsTotal').textContent = total;
+}
+
+function previousPage() {
+    if (currentStudentsPage > 1) {
+        currentStudentsPage--;
+        renderStudentsTable();
+    }
+}
+
+function nextPage() {
+    const maxPages = Math.ceil(filteredStudents.length / studentsPerPage);
+    if (currentStudentsPage < maxPages) {
+        currentStudentsPage++;
+        renderStudentsTable();
+    }
+}
+
+// Student actions
+function viewStudent(studentId) {
+    const student = students.find(s => s.id === studentId);
+    if (student) {
+        showNotification(`عرض تفاصيل الطالب: ${student.name}`, 'info');
+        // Implementation for viewing student details
+    }
+}
+
+function editStudent(studentId) {
+    const student = students.find(s => s.id === studentId);
+    if (student) {
+        showNotification(`تعديل بيانات الطالب: ${student.name}`, 'info');
+        // Implementation for editing student
+    }
+}
+
+function messageStudent(studentId) {
+    const student = students.find(s => s.id === studentId);
+    if (student) {
+        showNotification(`إرسال رسالة إلى: ${student.name}`, 'info');
+        // Implementation for messaging student
+    }
+}
+
+function deleteStudent(studentId) {
+    const student = students.find(s => s.id === studentId);
+    if (student && confirm(`هل أنت متأكد من حذف الطالب: ${student.name}؟`)) {
+        const index = students.findIndex(s => s.id === studentId);
+        students.splice(index, 1);
+        filteredStudents = filteredStudents.filter(s => s.id !== studentId);
+        renderStudentsTable();
+        updateStudentsStats();
+        showNotification('تم حذف الطالب بنجاح', 'success');
+    }
+}
+
+function exportStudentsData() {
+    showNotification('جاري تصدير بيانات الطلاب...', 'info');
+    // Implementation for exporting data
+}
+</script>

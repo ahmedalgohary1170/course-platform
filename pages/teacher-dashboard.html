@@ -1,0 +1,257 @@
+<!-- Teacher Dashboard Page -->
+<div id="teacherDashboardPage" class="page hidden">
+    <div class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Dashboard Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">لوحة تحكم المدرس</h1>
+                    <p class="text-lg text-gray-600">مرحباً بك في لوحة التحكم الخاصة بك</p>
+                </div>
+                <div class="flex space-x-4 space-x-reverse mt-4 md:mt-0">
+                    <button onclick="document.getElementById('addCourseModal').classList.add('show')" 
+                            class="btn-primary">
+                        <i class="fas fa-plus ml-2"></i>
+                        إضافة كورس جديد
+                    </button>
+                    <button onclick="showPage('analytics')" class="btn-secondary">
+                        <i class="fas fa-chart-bar ml-2"></i>
+                        التقارير
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stats-card bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-3xl font-bold mb-1" id="totalCoursesCount">0</div>
+                            <div class="text-blue-100">إجمالي الكورسات</div>
+                        </div>
+                        <i class="fas fa-book text-4xl text-blue-200"></i>
+                    </div>
+                </div>
+                
+                <div class="stats-card bg-gradient-to-r from-green-500 to-green-600 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-3xl font-bold mb-1" id="totalStudentsCount">0</div>
+                            <div class="text-green-100">إجمالي الطلاب</div>
+                        </div>
+                        <i class="fas fa-users text-4xl text-green-200"></i>
+                    </div>
+                </div>
+                
+                <div class="stats-card bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-3xl font-bold mb-1" id="totalRevenueCount">0</div>
+                            <div class="text-purple-100">إجمالي الإيرادات</div>
+                        </div>
+                        <i class="fas fa-dollar-sign text-4xl text-purple-200"></i>
+                    </div>
+                </div>
+                
+                <div class="stats-card bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-3xl font-bold mb-1" id="avgRatingCount">0</div>
+                            <div class="text-orange-100">متوسط التقييم</div>
+                        </div>
+                        <i class="fas fa-star text-4xl text-orange-200"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">الإجراءات السريعة</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <button onclick="document.getElementById('addCourseModal').classList.add('show')" 
+                            class="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                        <i class="fas fa-plus text-2xl text-gray-400 mb-2"></i>
+                        <span class="text-sm text-gray-600">إضافة كورس</span>
+                    </button>
+                    
+                    <button onclick="showPage('studentsManagement')" 
+                            class="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-colors">
+                        <i class="fas fa-user-plus text-2xl text-gray-400 mb-2"></i>
+                        <span class="text-sm text-gray-600">إدارة الطلاب</span>
+                    </button>
+                    
+                    <button onclick="document.getElementById('createCouponModal').classList.add('show')" 
+                            class="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors">
+                        <i class="fas fa-ticket-alt text-2xl text-gray-400 mb-2"></i>
+                        <span class="text-sm text-gray-600">إنشاء كوبون</span>
+                    </button>
+                    
+                    <button onclick="showPage('analytics')" 
+                            class="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors">
+                        <i class="fas fa-chart-line text-2xl text-gray-400 mb-2"></i>
+                        <span class="text-sm text-gray-600">عرض التقارير</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Activity & My Courses -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">النشاط الأخير</h2>
+                        <button class="text-blue-600 hover:text-blue-700 text-sm">عرض الكل</button>
+                    </div>
+                    <div id="recentActivity" class="space-y-4">
+                        <!-- Recent activity items will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- My Courses -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-semibold text-gray-800">كورساتي</h2>
+                        <button onclick="showPage('courses')" class="text-blue-600 hover:text-blue-700 text-sm">عرض الكل</button>
+                    </div>
+                    <div id="teacherCoursesList" class="space-y-4">
+                        <!-- Teacher's courses will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Chart -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mt-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">أداء الكورسات</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Enrollment Chart -->
+                    <div class="text-center">
+                        <div class="relative w-32 h-32 mx-auto mb-4">
+                            <svg class="w-32 h-32 transform -rotate-90">
+                                <circle cx="64" cy="64" r="56" stroke="#e5e7eb" stroke-width="8" fill="none"></circle>
+                                <circle cx="64" cy="64" r="56" stroke="#3b82f6" stroke-width="8" fill="none" 
+                                        stroke-dasharray="351.86" stroke-dashoffset="87.97" stroke-linecap="round"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold text-gray-800">75%</span>
+                            </div>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">معدل التسجيل</h3>
+                        <p class="text-sm text-gray-600">هذا الشهر</p>
+                    </div>
+
+                    <!-- Completion Chart -->
+                    <div class="text-center">
+                        <div class="relative w-32 h-32 mx-auto mb-4">
+                            <svg class="w-32 h-32 transform -rotate-90">
+                                <circle cx="64" cy="64" r="56" stroke="#e5e7eb" stroke-width="8" fill="none"></circle>
+                                <circle cx="64" cy="64" r="56" stroke="#10b981" stroke-width="8" fill="none" 
+                                        stroke-dasharray="351.86" stroke-dashoffset="140.74" stroke-linecap="round"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold text-gray-800">60%</span>
+                            </div>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">معدل الإكمال</h3>
+                        <p class="text-sm text-gray-600">متوسط عام</p>
+                    </div>
+
+                    <!-- Satisfaction Chart -->
+                    <div class="text-center">
+                        <div class="relative w-32 h-32 mx-auto mb-4">
+                            <svg class="w-32 h-32 transform -rotate-90">
+                                <circle cx="64" cy="64" r="56" stroke="#e5e7eb" stroke-width="8" fill="none"></circle>
+                                <circle cx="64" cy="64" r="56" stroke="#f59e0b" stroke-width="8" fill="none" 
+                                        stroke-dasharray="351.86" stroke-dashoffset="70.37" stroke-linecap="round"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-2xl font-bold text-gray-800">4.8</span>
+                            </div>
+                        </div>
+                        <h3 class="font-semibold text-gray-800">تقييم الطلاب</h3>
+                        <p class="text-sm text-gray-600">من 5 نجوم</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load teacher dashboard data
+function loadTeacherDashboard() {
+    if (!currentUser || currentUser.role !== 'teacher') return;
+    
+    // Update stats
+    document.getElementById('totalCoursesCount').textContent = courses.length;
+    document.getElementById('totalStudentsCount').textContent = students.length;
+    document.getElementById('totalRevenueCount').textContent = formatCurrency(calculateTotalRevenue());
+    document.getElementById('avgRatingCount').textContent = calculateAverageRating().toFixed(1);
+    
+    // Load recent activity
+    loadRecentActivity();
+    
+    // Load teacher's courses
+    loadTeacherCourses();
+}
+
+function calculateTotalRevenue() {
+    return courses.reduce((total, course) => total + (course.price * course.students), 0);
+}
+
+function calculateAverageRating() {
+    const totalRating = courses.reduce((sum, course) => sum + course.rating, 0);
+    return courses.length > 0 ? totalRating / courses.length : 0;
+}
+
+function loadRecentActivity() {
+    const activities = [
+        { type: 'enrollment', message: 'طالب جديد سجل في كورس JavaScript', time: 'منذ 5 دقائق', icon: 'fa-user-plus', color: 'text-green-600' },
+        { type: 'completion', message: 'طالب أكمل كورس HTML & CSS', time: 'منذ ساعة', icon: 'fa-check-circle', color: 'text-blue-600' },
+        { type: 'review', message: 'تقييم جديد 5 نجوم على كورس React', time: 'منذ 3 ساعات', icon: 'fa-star', color: 'text-yellow-600' },
+        { type: 'payment', message: 'دفعة جديدة بقيمة 299 ج.م', time: 'منذ يوم', icon: 'fa-dollar-sign', color: 'text-purple-600' }
+    ];
+    
+    const activityContainer = document.getElementById('recentActivity');
+    if (activityContainer) {
+        activityContainer.innerHTML = activities.map(activity => `
+            <div class="flex items-center space-x-3 space-x-reverse p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <div class="flex-shrink-0">
+                    <i class="fas ${activity.icon} ${activity.color}"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="text-sm text-gray-800">${activity.message}</p>
+                    <p class="text-xs text-gray-500">${activity.time}</p>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function loadTeacherCourses() {
+    const teacherCourses = courses.slice(0, 3); // Show first 3 courses
+    const coursesContainer = document.getElementById('teacherCoursesList');
+    
+    if (coursesContainer) {
+        coursesContainer.innerHTML = teacherCourses.map(course => `
+            <div class="flex items-center space-x-4 space-x-reverse p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <img src="${course.image}" alt="${course.title}" class="w-12 h-12 rounded-lg object-cover">
+                <div class="flex-1">
+                    <h4 class="font-medium text-gray-800">${course.title}</h4>
+                    <div class="flex items-center space-x-4 space-x-reverse text-sm text-gray-600">
+                        <span><i class="fas fa-users ml-1"></i>${course.students}</span>
+                        <span><i class="fas fa-star ml-1"></i>${course.rating}</span>
+                    </div>
+                </div>
+                <button onclick="editCourse(${course.id})" class="text-blue-600 hover:text-blue-700">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+        `).join('');
+    }
+}
+
+function editCourse(courseId) {
+    // Implementation for editing course
+    showNotification('ميزة تعديل الكورس قيد التطوير', 'info');
+}
+</script>

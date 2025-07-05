@@ -1,0 +1,199 @@
+<!-- Profile Page -->
+<div id="profilePage" class="page hidden">
+    <div class="pt-24 pb-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Profile Header -->
+            <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+                <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6 md:space-x-reverse">
+                    <!-- Profile Picture -->
+                    <div class="relative">
+                        <img src="https://via.placeholder.com/120x120/4F46E5/FFFFFF?text=صورة" 
+                             alt="الصورة الشخصية" 
+                             class="w-30 h-30 rounded-full border-4 border-blue-100">
+                        <button class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-camera text-sm"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Profile Info -->
+                    <div class="flex-1 text-center md:text-right">
+                        <h1 id="profileName" class="text-3xl font-bold text-gray-800 mb-2">اسم المستخدم</h1>
+                        <p id="profileEmail" class="text-gray-600 mb-4">البريد الإلكتروني</p>
+                        <div class="flex flex-wrap justify-center md:justify-start gap-2">
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">طالب</span>
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">عضو منذ 2024</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Edit Button -->
+                    <button onclick="editProfile()" class="btn-primary">
+                        <i class="fas fa-edit ml-2"></i>
+                        تعديل الملف الشخصي
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="stats-card">
+                    <div class="text-3xl font-bold text-blue-600 mb-2" id="enrolledCoursesCount">0</div>
+                    <div class="text-gray-600">الكورسات المسجلة</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl font-bold text-green-600 mb-2" id="completedCoursesCount">0</div>
+                    <div class="text-gray-600">الكورسات المكتملة</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl font-bold text-purple-600 mb-2" id="certificatesCount">0</div>
+                    <div class="text-gray-600">الشهادات المحصلة</div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="border-b border-gray-200">
+                    <nav class="flex">
+                        <button onclick="showProfileTab('courses')" 
+                                class="profile-tab active px-6 py-4 text-sm font-medium border-b-2 border-blue-600 text-blue-600">
+                            كورساتي
+                        </button>
+                        <button onclick="showProfileTab('progress')" 
+                                class="profile-tab px-6 py-4 text-sm font-medium text-gray-500 hover:text-gray-700">
+                            التقدم
+                        </button>
+                        <button onclick="showProfileTab('certificates')" 
+                                class="profile-tab px-6 py-4 text-sm font-medium text-gray-500 hover:text-gray-700">
+                            الشهادات
+                        </button>
+                        <button onclick="showProfileTab('settings')" 
+                                class="profile-tab px-6 py-4 text-sm font-medium text-gray-500 hover:text-gray-700">
+                            الإعدادات
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6">
+                    <!-- My Courses Tab -->
+                    <div id="coursesTab" class="profile-tab-content">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">الكورسات المسجلة</h3>
+                        <div id="enrolledCoursesList" class="space-y-4">
+                            <!-- Enrolled courses will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Progress Tab -->
+                    <div id="progressTab" class="profile-tab-content hidden">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">تقدم التعلم</h3>
+                        <div id="progressChart" class="space-y-6">
+                            <!-- Progress charts will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Certificates Tab -->
+                    <div id="certificatesTab" class="profile-tab-content hidden">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">الشهادات المحصلة</h3>
+                        <div id="certificatesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Certificates will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div id="settingsTab" class="profile-tab-content hidden">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">إعدادات الحساب</h3>
+                        <form id="profileSettingsForm" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="form-label">الاسم الكامل</label>
+                                    <input type="text" id="settingsName" class="form-input">
+                                </div>
+                                <div>
+                                    <label class="form-label">البريد الإلكتروني</label>
+                                    <input type="email" id="settingsEmail" class="form-input">
+                                </div>
+                                <div>
+                                    <label class="form-label">رقم الهاتف</label>
+                                    <input type="tel" id="settingsPhone" class="form-input">
+                                </div>
+                                <div>
+                                    <label class="form-label">تاريخ الميلاد</label>
+                                    <input type="date" id="settingsBirthdate" class="form-input">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="form-label">نبذة شخصية</label>
+                                <textarea id="settingsBio" rows="4" class="form-input" 
+                                          placeholder="اكتب نبذة مختصرة عنك..."></textarea>
+                            </div>
+
+                            <!-- Notification Settings -->
+                            <div class="border-t pt-6">
+                                <h4 class="text-lg font-semibold text-gray-800 mb-4">إعدادات التنبيهات</h4>
+                                <div class="space-y-3">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="mr-3 text-gray-700">تنبيهات الكورسات الجديدة</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="mr-3 text-gray-700">تنبيهات التقدم في التعلم</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                        <span class="mr-3 text-gray-700">تنبيهات العروض والخصومات</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end space-x-4 space-x-reverse pt-6">
+                                <button type="button" class="btn-secondary">إلغاء</button>
+                                <button type="submit" class="btn-primary">حفظ التغييرات</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Profile Tab Management
+function showProfileTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.profile-tab-content').forEach(tab => {
+        tab.classList.add('hidden');
+    });
+    
+    // Remove active class from all tabs
+    document.querySelectorAll('.profile-tab').forEach(tab => {
+        tab.classList.remove('active', 'border-blue-600', 'text-blue-600');
+        tab.classList.add('text-gray-500');
+    });
+    
+    // Show selected tab content
+    document.getElementById(tabName + 'Tab').classList.remove('hidden');
+    
+    // Add active class to selected tab
+    event.target.classList.add('active', 'border-blue-600', 'text-blue-600');
+    event.target.classList.remove('text-gray-500');
+}
+
+function editProfile() {
+    showProfileTab('settings');
+}
+
+// Load profile data
+function loadProfileData() {
+    if (currentUser) {
+        document.getElementById('profileName').textContent = currentUser.name;
+        document.getElementById('profileEmail').textContent = currentUser.email;
+        
+        // Load settings form
+        document.getElementById('settingsName').value = currentUser.name || '';
+        document.getElementById('settingsEmail').value = currentUser.email || '';
+        document.getElementById('settingsPhone').value = currentUser.phone || '';
+    }
+}
+</script>
